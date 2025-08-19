@@ -1,0 +1,57 @@
+
+.App {
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+.Header {
+  color: #000000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: calc(10vh + 20px);
+  background-color: #FFC067;
+  font-size: calc(20px + 2vmin);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+}
+
+.Body {
+  position: fixed;
+  top: calc(10vh + 30px);
+  bottom: calc(7vh + 50px);
+  left: calc(5vw + 10px);
+  width: calc(90vw - 20px);
+  border: 2px solid #888888;
+  border-radius: 8px; 
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  padding: 1rem;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+#prompt {
+  position: fixed;
+  width: 94vw;
+  height: calc(5vh + 30px);
+  left: 3vw;
+  bottom: 2vh;
+  font-size: calc(15px + 2vmin);
+}
+
+#loadingIcon {
+  width: 8vh;
+  height: 8vh;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
