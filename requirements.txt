@@ -1,0 +1,8 @@
+weaviate-client
+python-dotenv
+flask
+flask-cors
+openai
+fastapi
+requests
+beautifulsoup4
