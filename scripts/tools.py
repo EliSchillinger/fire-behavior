@@ -1,5 +1,6 @@
 import requests
 import os
+import json
 from dotenv import load_dotenv
 import weaviate
 import weaviate.classes as wvc
@@ -31,15 +32,27 @@ tool_schemas = [
             },
             "required": ["url"]
         }
+    },
+    {
+        "name": "national_weather",
+        "description": "Retreives weather data and alerts at a specific latitude and longitude.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "latitude": { "type": "string", "descriptions": "The latitude coordinate to get weather information from." },
+                "longitude": { "type": "string", "descriptions": "The longitude coordinate to get weather information from." }
+            },
+            "required": ["latitude", "longitude"]
+        }
     }
 ]
 
 def get_weaviate_client():
     client = weaviate.connect_to_custom(
-        http_host="128.196.65.212",
+        http_host="128.196.254.74",
         http_port=8081,
         http_secure=False,
-        grpc_host="128.196.65.212",
+        grpc_host="128.196.254.74",
         grpc_port=50051,
         grpc_secure=False,
         headers={"X-Cohere-Api-Key": COHERE_API_KEY}
@@ -64,7 +77,11 @@ def query_links(args):
 
         print(f"Weaviate query successful: {response}")
 
-        return "https://gacc.nifc.gov/swcc/predictive/intelligence/daily/SWCC_Morning_Situation_Report/SWCC_Morning_Situation_Report.htm"
+        serializable_data = []
+        for obj in response.objects:
+            serializable_data.append(obj.properties) 
+
+        return json.dumps(serializable_data)
     
     except Exception as e:
         print("Weaviate query failed")
@@ -75,16 +92,48 @@ def query_links(args):
 
 def fetch_url(args):
     url = args["url"]
-    response = requests.get(url)
-    soup = BeautifulSoup(response.text, "html.parser")
-    text = soup.get_text(separator=" ", strip=True)
-    return { "content": text[:5000] }
+    
+    try:
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()
+        
+        raw_html = response.text
+
+        print(raw_html[:10000])
+        return { "content": raw_html }
+
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching URL {url}: {e}")
+        return { "content": f"Error: Could not fetch content from {url}. {e}" }
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        return { "content": f"Error: An unexpected error occurred while fetching {url}. {e}" }
+    
+def national_weather(args):
+    lat = args["latitude"]
+    lon = args["longitude"]
+    weather_url = f"https://api.weather.gov/points/{lat},{lon}"
+
+    try:
+        response = requests.get(weather_url, timeout=10)
+        response.raise_for_status()
+
+        return response.text
+    
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching weather data from {weather_url}: {e}")
+        return { "content": f"Error: Could not fetch content from {weather_url}. {e}" }
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        return { "content": f"Error: An unexpected error occurred while fetching {weather_url}. {e}" }
 
 def call_tool(name, args):
     if name == "query_links":
         return query_links(args)
     elif name == "fetch_url":
         return fetch_url(args)
+    elif name == "national_weather":
+        return national_weather(args)
     else:
         raise ValueError(f"Unknown tool: {name}")
 

@@ -1,0 +1,19 @@
+- [ ] Analyze requirements
+- [ ] Set up necessary files
+- [ ] Implement main functionality
+- [ ] Handle edge cases
+- [ ] Test the implementation
+- [ ] Verify results
+- [ ] Create a minimal demo that loads wildfire_prompt_template.json and renders a sample response
+- [ ] Implement data ingestion mappings for wildfire, weather, and road data sources
+- [ ] Add JSON schema validation for the response_format and data_schema
+- [ ] Integrate the prompt template into the existing application flow (e.g., App.jsx or a dedicated service)
+- [ ] Create unit tests for prompt generation and data population
+- [ ] Add end-to-end example usage document
+- [ ] Update README with usage instructions for generating wildfire weather/road briefings
+- [ ] Document data_sources schema and how to extend it
+- [ ] Set up basic CI to validate JSON structure and lint related scripts
+- [ ] Review auto-formatting effects and ensure consistency across files
+- [ ] Create a quick-start demo script that loads wildfire_prompt_template.json and renders a sample response
+- [ ] Add unit-test skeleton for prompt generation and data population
+- [ ] Add CONTRIBUTING.md outlining data_sources extension and prompt customization

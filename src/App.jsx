@@ -29,10 +29,13 @@ function App() {
       setInputValue('');
 
       const data = await res.json();
-      console.log("Data received, sanatizing")
-      const sanitizedHtml = DOMPurify.sanitize(data.response);
+      console.log("Data received, sanatizing: " + data)
+      const sanitizedHtml = DOMPurify.sanitize(data.response, {
+        ADD_TAGS: ['iframe'],
+        ADD_ATTR: ['src', 'title', 'style', 'allowfullscreen', 'frameborder', 'scrolling']
+      });
       
-      console.log("Data sanatized, " + sanatizedHtml + ", setting html content")
+      console.log("Data sanitized, " + sanitizedHtml + ", setting html content")
       setHtmlContent(sanitizedHtml);
 
     } catch (err) {
